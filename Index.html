@@ -1,271 +1,0 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FaceDahou - شبكة الطلبة الجزائريين | فكرة دحو أسامة</title>
-    
-    <!-- External Libraries -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <!-- Auth Modal -->
-    <div id="authModal" class="auth-modal">
-        <div class="auth-container">
-            <div class="auth-header">
-                <h1><i class="fas fa-graduation-cap"></i> FaceDahou</h1>
-                <p>شبكة الطلبة الجزائريين لتبادل الدروس والمعرفة</p>
-            </div>
-            
-            <!-- Login Form -->
-            <div id="loginForm">
-                <form class="auth-form" onsubmit="handleLogin(event)">
-                    <div class="form-group">
-                        <label>البريد الإلكتروني</label>
-                        <input type="email" id="loginEmail" placeholder="أدخل بريدك الإلكتروني" required>
-                    </div>
-                    <div class="form-group">
-                        <label>كلمة المرور</label>
-                        <input type="password" id="loginPassword" placeholder="أدخل كلمة المرور" required>
-                    </div>
-                    <button type="submit" class="auth-btn">تسجيل الدخول</button>
-                </form>
-                
-                <div class="auth-divider">أو</div>
-                
-                <button class="google-btn" onclick="loginWithGoogle()">
-                    <i class="fab fa-google"></i>
-                    تسجيل الدخول عبر Google
-                </button>
-                
-                <div class="auth-switch">
-                    لا تملك حساب؟ <a href="#" onclick="showSignup()">إنشاء حساب جديد</a>
-                </div>
-            </div>
-            
-            <!-- Signup Form -->
-            <div id="signupForm" class="hidden">
-                <form class="auth-form" onsubmit="handleSignup(event)">
-                    <div class="form-group">
-                        <label>الاسم الكامل</label>
-                        <input type="text" id="signupName" placeholder="أدخل اسمك الكامل" required>
-                    </div>
-                    <div class="form-group">
-                        <label>الجامعة</label>
-                        <input type="text" id="signupUniversity" placeholder="مثال: جامعة الجزائر 3" required>
-                    </div>
-                    <div class="form-group">
-                        <label>التخصص</label>
-                        <input type="text" id="signupMajor" placeholder="مثال: علوم الحاسوب" required>
-                    </div>
-                    <div class="form-group">
-                        <label>السنة الدراسية</label>
-                        <select id="signupYear">
-                            <option value="1">السنة الأولى</option>
-                            <option value="2">السنة الثانية</option>
-                            <option value="3">السنة الثالثة</option>
-                            <option value="4">الماستر الأول</option>
-                            <option value="5">الماستر الثاني</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>البريد الإلكتروني</label>
-                        <input type="email" id="signupEmail" placeholder="أدخل بريدك الإلكتروني" required>
-                    </div>
-                    <div class="form-group">
-                        <label>كلمة المرور</label>
-                        <input type="password" id="signupPassword" placeholder="اختر كلمة مرور قوية" required>
-                    </div>
-                    <button type="submit" class="auth-btn">إنشاء حساب</button>
-                </form>
-                
-                <div class="auth-divider">أو</div>
-                
-                <button class="google-btn" onclick="loginWithGoogle()">
-                    <i class="fab fa-google"></i>
-                    التسجيل عبر Google
-                </button>
-                
-                <div class="auth-switch">
-                    لديك حساب بالفعل؟ <a href="#" onclick="showLogin()">تسجيل الدخول</a>
-                </div>
-            </div>
-            
-            <div class="creator-credit">
-                💡 فكرة وتصميم: <strong>دحو أسامة</strong>
-            </div>
-        </div>
-    </div>
-
-    <!-- Main App -->
-    <div id="mainApp" class="hidden">
-        <!-- Header -->
-        <header class="header">
-            <div class="logo">
-                <i class="fas fa-graduation-cap"></i>
-                <span>FaceDahou</span>
-            </div>
-            
-            <div class="search-bar search-icon">
-                <input type="text" placeholder="ابحث عن دروس، طلاب، مجموعات..." id="searchInput">
-                <i class="fas fa-search"></i>
-            </div>
-            
-            <div class="header-actions">
-                <button class="header-btn" onclick="showCreatePost()">
-                    <i class="fas fa-plus"></i>
-                    <span>منشور جديد</span>
-                </button>
-                <button class="header-btn" onclick="showNotifications()">
-                    <i class="fas fa-bell"></i>
-                </button>
-                <button class="header-btn" onclick="showMessages()">
-                    <i class="fas fa-comment"></i>
-                </button>
-                <img src="https://ui-avatars.com/api/?name=Student&background=4267B2&color=fff&size=40" 
-                     alt="User" class="user-avatar" id="userAvatar" onclick="showProfile()">
-            </div>
-        </header>
-
-        <!-- Container -->
-        <div class="container">
-            <!-- Left Sidebar -->
-            <aside class="sidebar">
-                <div class="sidebar-item active">
-                    <i class="fas fa-home"></i>
-                    <span>الصفحة الرئيسية</span>
-                </div>
-                <div class="sidebar-item">
-                    <i class="fas fa-users"></i>
-                    <span>المجموعات</span>
-                </div>
-                <div class="sidebar-item">
-                    <i class="fas fa-bookmark"></i>
-                    <span>العناصر المحفوظة</span>
-                </div>
-                <div class="sidebar-item">
-                    <i class="fas fa-clock"></i>
-                    <span>الذكريات</span>
-                </div>
-                <div class="sidebar-item">
-                    <i class="fas fa-video"></i>
-                    <span>الفيديوهات</span>
-                </div>
-                <div class="sidebar-item">
-                    <i class="fas fa-graduation-cap"></i>
-                    <span>المواد الدراسية</span>
-                </div>
-                <div class="sidebar-item">
-                    <i class="fas fa-calendar-alt"></i>
-                    <span>الأحداث</span>
-                </div>
-                <div class="sidebar-item" onclick="logout()">
-                    <i class="fas fa-sign-out-alt"></i>
-                    <span>تسجيل الخروج</span>
-                </div>
-            </aside>
-
-            <!-- Main Feed -->
-            <main class="feed">
-                <!-- Create Post -->
-                <div class="create-post">
-                    <div class="create-post-header">
-                        <img src="https://ui-avatars.com/api/?name=Student&background=4267B2&color=fff&size=45" 
-                             alt="User" class="user-avatar" id="createPostAvatar">
-                        <textarea class="create-post-input" placeholder="بماذا تفكر؟ شارك درساً أو ملفاً مفيداً..." 
-                                  id="postContent" rows="2"></textarea>
-                    </div>
-                    <div class="create-post-actions">
-                        <button class="action-btn photo" onclick="uploadPhoto()">
-                            <i class="fas fa-image"></i>
-                            <span>صورة</span>
-                        </button>
-                        <button class="action-btn video" onclick="uploadVideo()">
-                            <i class="fas fa-video"></i>
-                            <span>فيديو</span>
-                        </button>
-                        <button class="action-btn file" onclick="uploadFile()">
-                            <i class="fas fa-file-pdf"></i>
-                            <span>ملف PDF</span>
-                        </button>
-                    </div>
-                </div>
-                <input type="file" id="fileInput" style="display: none;" accept="image/*,video/*,.pdf" onchange="handleFileUpload(event)">
-
-                <!-- Posts Container -->
-                <div id="postsContainer">
-                    <div class="loading">
-                        <div class="spinner"></div>
-                        <p>جاري تحميل المنشورات...</p>
-                    </div>
-                </div>
-            </main>
-
-            <!-- Right Sidebar -->
-            <aside class="right-sidebar">
-                <!-- Groups Widget -->
-                <div class="widget">
-                    <h3>المجموعات المقترحة</h3>
-                    <div class="group-item">
-                        <div class="group-icon">
-                            <i class="fas fa-laptop-code"></i>
-                        </div>
-                        <div class="group-info">
-                            <h4>علوم الحاسوب</h4>
-                            <p>1,234 عضو</p>
-                        </div>
-                    </div>
-                    <div class="group-item">
-                        <div class="group-icon" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
-                            <i class="fas fa-calculator"></i>
-                        </div>
-                        <div class="group-info">
-                            <h4>الرياضيات</h4>
-                            <p>856 عضو</p>
-                        </div>
-                    </div>
-                    <div class="group-item">
-                        <div class="group-icon" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
-                            <i class="fas fa-flask"></i>
-                        </div>
-                        <div class="group-info">
-                            <h4>الفيزياء</h4>
-                            <p>623 عضو</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Universities Widget -->
-                <div class="widget">
-                    <h3>الجامعات الجزائرية</h3>
-                    <div class="group-item">
-                        <div class="group-icon" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
-                            <i class="fas fa-university"></i>
-                        </div>
-                        <div class="group-info">
-                            <h4>جامعة الجزائر</h4>
-                            <p>3,421 طالب</p>
-                        </div>
-                    </div>
-                    <div class="group-item">
-                        <div class="group-icon" style="background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);">
-                            <i class="fas fa-university"></i>
-                        </div>
-                        <div class="group-info">
-                            <h4>جامعة وهران</h4>
-                            <p>2,156 طالب</p>
-                        </div>
-                    </div>
-                </div>
-            </aside>
-        </div>
-    </div>
-
-    <!-- Custom JavaScript -->
-    <script src="script.js"></script>
-</body>
-</html>

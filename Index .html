@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>منصة الدروس الجامعية</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #2ecc71 0%, #27ae60 50%, #1e8449 100%); min-height: 100vh; padding: 10px; }
+.container { max-width: 1000px; margin: auto; background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 15px 50px rgba(0,0,0,0.3); }
+header { background: linear-gradient(135deg, #27ae60 0%, #229954 100%); color: white; text-align: center; padding: 25px 20px; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+header h1 { font-size: 28px; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; gap: 12px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+header h1 i { font-size: 34px; }
+#userWelcome { font-size: 16px; margin-top: 10px; opacity: 0.95; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.logout-btn { background: #e74c3c; color: white; border: none; padding: 10px 25px; border-radius: 25px; cursor: pointer; font-weight: 600; margin-top: 15px; transition: all 0.3s; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 10px rgba(231, 76, 60, 0.3); }
+.logout-btn:hover { background: #c0392b; transform: translateY(-2px); box-shadow: 0 6px 15px rgba(231, 76, 60, 0.4); }
+.tabs { display: flex; background: #f8f9fa; border-bottom: 3px solid #27ae60; overflow-x: auto; }
+.tab { flex: 1; padding: 16px 10px; text-align: center; cursor: pointer; font-weight: 600; color: #555; border: none; background: none; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; min-width: 120px; white-space: nowrap; }
+.tab i { font-size: 18px; }
+.tab:hover { background: #e8f5e9; color: #27ae60; }
+.tab.active { background: white; color: #27ae60; border-bottom: 4px solid #27ae60; }
+.content { padding: 25px; min-height: 450px; }
+.section { display: none; }
+.section.active { display: block; animation: fadeIn 0.4s; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+.section h3 { color: #27ae60; margin-bottom: 20px; font-size: 24px; display: flex; align-items: center; gap: 12px; padding-bottom: 12px; border-bottom: 3px solid #27ae60; }
+.subjects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; margin-top: 20px; }
+.subject-card { background: linear-gradient(135deg, #27ae60 0%, #229954 100%); color: white; padding: 25px; border-radius: 15px; cursor: pointer; transition: all 0.3s; text-align: center; box-shadow: 0 5px 15px rgba(39, 174, 96, 0.3); position: relative; overflow: hidden; }
+.subject-card::before { content: ''; position: absolute; top: -50%; right: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%); transform: rotate(45deg); }
+.subject-card:hover { transform: translateY(-8px) scale(1.03); box-shadow: 0 10px 25px rgba(39, 174, 96, 0.5); }
+.subject-card i { font-size: 42px; margin-bottom: 15px; display: block; }
+.subject-card h4 { font-size: 18px; margin-bottom: 8px; }
+.subject-card .lesson-count { font-size: 13px; opacity: 0.9; margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 6px; }
+.lessons-list { margin-top: 20px; }
+.lesson-item { background: white; border: 2px solid #e8f5e9; padding: 18px; margin: 12px 0; border-radius: 12px; border-right: 5px solid #27ae60; transition: all 0.3s; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 3px 10px rgba(0,0,0,0.05); }
+.lesson-item:hover { background: #e8f5e9; transform: translateX(-5px); box-shadow: 0 5px 15px rgba(39, 174, 96, 0.2); }
+.lesson-item a { color: #27ae60; text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 12px; flex: 1; }
+.lesson-item a i { font-size: 22px; }
+.file-size { color: #7f8c8d; font-size: 13px; padding: 6px 14px; background: #ecf0f1; border-radius: 20px; display: flex; align-items: center; gap: 6px; }
+.delete-btn { background: #e74c3c; color: white; border: none; padding: 8px 12px; border-radius: 8px; cursor: pointer; margin-left: 10px; transition: all 0.3s; }
+.delete-btn:hover { background: #c0392b; transform: scale(1.05); }
+input[type="text"], input[type="email"], input[type="password"], input[type="file"], select { width: 100%; padding: 14px; margin: 10px 0; border: 2px solid #e8f5e9; border-radius: 10px; font-size: 15px; transition: all 0.3s; font-family: inherit; }
+input:focus, select:focus { outline: none; border-color: #27ae60; box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.1); }
+button.primary-btn { padding: 14px; width: 100%; border: none; border-radius: 10px; background: linear-gradient(135deg, #27ae60 0%, #229954 100%); color: white; font-weight: 600; font-size: 16px; cursor: pointer; margin-top: 15px; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3); }
+button.primary-btn:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(39, 174, 96, 0.4); }
+.message { margin-top: 20px; padding: 15px; border-radius: 10px; font-weight: 600; text-align: center; display: flex; align-items: center; justify-content: center; gap: 10px; }
+.message.success { background: #d4edda; color: #155724; border: 2px solid #c3e6cb; }
+.message.error { background: #f8d7da; color: #721c24; border: 2px solid #f5c6cb; }
+.message.info { background: #d1ecf1; color: #0c5460; border: 2px solid #bee5eb; }
+.loading { text-align: center; padding: 50px; color: #7f8c8d; }
+.loading i { font-size: 50px; color: #27ae60; animation: spin 1.5s linear infinite; }
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+.empty-state { text-align: center; padding: 60px 20px; color: #7f8c8d; }
+.empty-state i { font-size: 70px; margin-bottom: 20px; opacity: 0.3; color: #27ae60; }
+.back-btn { background: #95a5a6; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; margin-bottom: 20px; display: inline-flex; align-items: center; gap: 8px; transition: all 0.3s; }
+.back-btn:hover { background: #7f8c8d; transform: translateX(5px); }
+@media (max-width: 768px) { .subjects-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; } .subject-card { padding: 20px; } .subject-card i { font-size: 35px; } .tab span { display: none; } header h1 { font-size: 22px; } .content { padding: 15px; } }
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+<h1><i class="fas fa-university"></i>منصة الدروس الجامعية</h1>
+<p id="userWelcome">مرحباً بك في منصة الدروس</p>
+<button id="logoutBtn" class="logout-btn" onclick="logout()" style="display:none;"><i class="fas fa-sign-out-alt"></i>تسجيل الخروج</button>
+</header>
+<div class="tabs">
+<button class="tab active" onclick="switchTab('subjects')"><i class="fas fa-th-large"></i><span>المقاييس</span></button>
+<button class="tab" onclick="switchTab('manage')" id="manageTab" style="display:none"><i class="fas fa-cog"></i><span>إدارة المقاييس</span></button>
+<button class="tab" onclick="switchTab('upload')" id="uploadTab" style="display:none"><i class="fas fa-cloud-upload-alt"></i><span>رفع درس</span></button>
+<button class="tab" onclick="switchTab('login')" id="loginTab"><i class="fas fa-lock"></i><span>تسجيل الدخول</span></button>
+</div>
+<div class="content">
+<div id="subjects" class="section active">
+<h3><i class="fas fa-books"></i>المقاييس المتاحة</h3>
+<div id="subjectsGrid" class="subjects-grid"><div class="loading"><i class="fas fa-spinner"></i><p>جاري تحميل المقاييس...</p></div></div>
+</div>
+<div id="lessons" class="section">
+<button class="back-btn" onclick="switchTab('subjects')"><i class="fas fa-arrow-right"></i>الرجوع للمقاييس</button>
+<h3 id="lessonsSectionTitle"><i class="fas fa-book-open"></i>دروس المقياس</h3>
+<div id="lessonsContainer"><div class="loading"><i class="fas fa-spinner"></i><p>جاري تحميل الدروس...</p></div></div>
+</div>
+<div id="manage" class="section">
+<h3><i class="fas fa-edit"></i>إدارة المقاييس</h3>
+<div style="margin-bottom: 30px;">
+<h4 style="color: #27ae60; margin-bottom: 15px;"><i class="fas fa-plus-circle"></i>إضافة مقياس جديد</h4>
+<input type="text" id="newSubjectName" placeholder="اسم المقياس (مثال: الرياضيات 1)">
+<select id="newSubjectIcon">
+<option value="fa-calculator">آلة حاسبة (رياضيات)</option>
+<option value="fa-atom">ذرة (فيزياء)</option>
+<option value="fa-flask">قارورة (كيمياء)</option>
+<option value="fa-laptop-code">برمجة</option>
+<option value="fa-chart-line">إحصاء</option>
+<option value="fa-language">لغات</option>
+<option value="fa-book">كتاب عام</option>
+<option value="fa-microscope">مجهر (علوم)</option>
+<option value="fa-project-diagram">هندسة</option>
+<option value="fa-brain">علم نفس</option>
+</select>
+<button class="primary-btn" onclick="addSubject()"><i class="fas fa-plus"></i>إضافة المقياس</button>
+</div>
+<div id="manageMsg"></div>
+<div id="subjectsList" style="margin-top: 30px;"></div>
+</div>
+<div id="upload" class="section">
+<h3><i class="fas fa-upload"></i>رفع درس جديد</h3>
+<select id="uploadSubjectSelect"><option value="">اختر المقياس</option></select>
+<input type="text" id="lessonTitle" placeholder="عنوان الدرس">
+<input type="file" id="lessonFile" accept=".pdf,.doc,.docx,.ppt,.pptx,.txt,.zip">
+<button class="primary-btn" onclick="uploadLesson()"><i class="fas fa-cloud-upload-alt"></i>رفع الدرس</button>
+<div id="uploadMsg"></div>
+</div>
+<div id="login" class="section">
+<h3><i class="fas fa-user-shield"></i>تسجيل دخول المسؤول</h3>
+<input type="email" id="email" placeholder="البريد الإلكتروني">
+<input type="password" id="password" placeholder="كلمة المرور">
+<button class="primary-btn" onclick="login()"><i class="fas fa-sign-in-alt"></i>دخول</button>
+<div id="loginMsg"></div>
+</div>
+</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL='https://ayqtblfxrejbmnnayifu.supabase.co';const SUPABASE_ANON_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF5cXRibGZ4cmVqYm1ubmF5aWZ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk1MTI5MjAsImV4cCI6MjA4NTA4ODkyMH0.kYFus0Ob9ogqfNhDuBG8KJyx3Ug06j2eI5ToS94ecf8';const ADMIN_EMAIL='dhwasamt387@gmail.com';const ADMIN_PASSWORD='oussama123';const{createClient}=supabase;const supabaseClient=createClient(SUPABASE_URL,SUPABASE_ANON_KEY);let currentSubject=null;let allSubjects=[];function checkLoginStatus(){const isLoggedIn=localStorage.getItem('isLoggedIn');const userEmail=localStorage.getItem('userEmail');if(isLoggedIn==='true'&&userEmail===ADMIN_EMAIL){showAdminMode(userEmail);}}function showAdminMode(email){document.getElementById('userWelcome').innerHTML=`<i class="fas fa-user-shield"></i>مرحباً أستاذ، ${email}`;document.getElementById('manageTab').style.display='flex';document.getElementById('uploadTab').style.display='flex';document.getElementById('loginTab').style.display='none';document.getElementById('logoutBtn').style.display='inline-flex';}function switchTab(tab){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));const tabButton=document.querySelector(`[onclick="switchTab('${tab}')"]`);if(tabButton)tabButton.classList.add('active');const section=document.getElementById(tab);if(section)section.classList.add('active');if(tab==='manage'){loadSubjectsForManagement();}else if(tab==='upload'){loadSubjectsForUpload();}}async function loadSubjects(){const container=document.getElementById('subjectsGrid');try{const{data,error}=await supabaseClient.from('subjects').select('*').order('name',{ascending:true});if(error)throw error;allSubjects=data||[];let html='';allSubjects.forEach(subject=>{const lessonCount=subject.lesson_count||0;html+=`<div class="subject-card" onclick="viewSubjectLessons('${subject.id}','${subject.name}')"><i class="fas ${subject.icon}"></i><h4>${subject.name}</h4><div class="lesson-count"><i class="fas fa-book"></i>${lessonCount} ${lessonCount===1?'درس':'دروس'}</div></div>`;});if(allSubjects.length===0){html=`<div class="empty-state" style="grid-column: 1/-1;"><i class="fas fa-inbox"></i><p>لا توجد مقاييس حالياً</p></div>`;}container.innerHTML=html;}catch(err){console.error('خطأ:',err);container.innerHTML=`<div class="empty-state" style="grid-column: 1/-1;"><i class="fas fa-exclamation-triangle"></i><p style="color: #e74c3c;">حدث خطأ في تحميل المقاييس</p><p style="font-size: 14px; margin-top: 10px;">تأكد من إعداد قاعدة البيانات بشكل صحيح</p></div>`;}}async function viewSubjectLessons(subjectId,subjectName){currentSubject=subjectId;document.getElementById('lessonsSectionTitle').innerHTML=`<i class="fas fa-book-open"></i>دروس ${subjectName}`;switchTab('lessons');const container=document.getElementById('lessonsContainer');container.innerHTML=`<div class="loading"><i class="fas fa-spinner"></i><p>جاري تحميل الدروس...</p></div>`;try{const{data,error}=await supabaseClient.storage.from('lessons-files').list(subjectId,{limit:100,sortBy:{column:'created_at',order:'desc'}});if(error)throw error;const files=data.filter(f=>f.name!=='.emptyFolderPlaceholder'&&!f.name.startsWith('.'));if(files.length===0){container.innerHTML=`<div class="empty-state"><i class="fas fa-folder-open"></i><p>لا توجد دروس في هذا المقياس حالياً</p></div>`;return;}const isAdmin=localStorage.getItem('isLoggedIn')==='true';let html='<div class="lessons-list">';files.forEach(file=>{const{data:{publicUrl}}=supabaseClient.storage.from('lessons-files').getPublicUrl(`${subjectId}/${file.name}`);const fileIcon=getFileIcon(file.name);const fileSize=formatFileSize(file.metadata?.size||0);html+=`<div class="lesson-item"><a href="${publicUrl}" target="_blank" download><i class="${fileIcon}"></i>${file.name}</a><div style="display: flex; align-items: center; gap: 10px;"><span class="file-size"><i class="fas fa-download"></i>${fileSize}</span>${isAdmin?`<button class="delete-btn" onclick="deleteLesson('${subjectId}','${file.name}')"><i class="fas fa-trash"></i></button>`:''}</div></div>`;});html+='</div>';container.innerHTML=html;}catch(err){console.error('خطأ:',err);container.innerHTML=`<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p style="color: #e74c3c;">حدث خطأ في تحميل الدروس</p><p style="font-size: 14px; margin-top: 10px;">تأكد من إنشاء Storage Bucket باسم: lessons-files</p></div>`;}}async function addSubject(){const name=document.getElementById('newSubjectName').value.trim();const icon=document.getElementById('newSubjectIcon').value;const msgElement=document.getElementById('manageMsg');if(!name){showMessage(msgElement,'error','الرجاء إدخال اسم المقياس');return;}try{const{data,error}=await supabaseClient.from('subjects').insert([{name,icon,lesson_count:0}]).select();if(error)throw error;showMessage(msgElement,'success','تم إضافة المقياس بنجاح');document.getElementById('newSubjectName').value='';const placeholderFile=new Blob([''],{type:'text/plain'});await supabaseClient.storage.from('lessons-files').upload(`${data[0].id}/.emptyFolderPlaceholder`,placeholderFile);loadSubjects();loadSubjectsForManagement();loadSubjectsForUpload();}catch(err){console.error('خطأ:',err);showMessage(msgElement,'error','حدث خطأ أثناء إضافة المقياس: '+err.message);}}async function deleteSubject(id,name){if(!confirm(`هل أنت متأكد من حذف مقياس "${name}"؟\nسيتم حذف جميع الدروس المرتبطة به.`)){return;}try{const{data:files}=await supabaseClient.storage.from('lessons-files').list(id);if(files&&files.length>0){const filePaths=files.map(f=>`${id}/${f.name}`);await supabaseClient.storage.from('lessons-files').remove(filePaths);}const{error}=await supabaseClient.from('subjects').delete().eq('id',id);if(error)throw error;loadSubjects();loadSubjectsForManagement();loadSubjectsForUpload();}catch(err){console.error('خطأ:',err);alert('حدث خطأ أثناء حذف المقياس: '+err.message);}}async function loadSubjectsForManagement(){const container=document.getElementById('subjectsList');try{const{data,error}=await supabaseClient.from('subjects').select('*').order('name',{ascending:true});if(error)throw error;if(!data||data.length===0){container.innerHTML='<p style="text-align:center; color:#7f8c8d;">لا توجد مقاييس</p>';return;}let html='<h4 style="color: #e74c3c; margin-bottom: 15px;"><i class="fas fa-list"></i> المقاييس الحالية</h4>';data.forEach(subject=>{html+=`<div class="lesson-item"><div style="display: flex; align-items: center; gap: 12px;"><i class="fas ${subject.icon}" style="font-size: 24px; color: #27ae60;"></i><span style="font-weight: 600; color: #27ae60;">${subject.name}</span><span class="file-size">${subject.lesson_count||0} دروس</span></div><button class="delete-btn" onclick="deleteSubject('${subject.id}','${subject.name}')"><i class="fas fa-trash"></i>حذف</button></div>`;});container.innerHTML=html;}catch(err){console.error('خطأ:',err);}}async function loadSubjectsForUpload(){const select=document.getElementById('uploadSubjectSelect');try{const{data,error}=await supabaseClient.from('subjects').select('*').order('name',{ascending:true});if(error)throw error;let html='<option value="">اختر المقياس</option>';data.forEach(subject=>{html+=`<option value="${subject.id}">${subject.name}</option>`;});select.innerHTML=html;}catch(err){console.error('خطأ:',err);}}async function uploadLesson(){const subjectId=document.getElementById('uploadSubjectSelect').value;const title=document.getElementById('lessonTitle').value.trim();const fileInput=document.getElementById('lessonFile');const file=fileInput.files[0];const msgElement=document.getElementById('uploadMsg');if(!subjectId){showMessage(msgElement,'error','الرجاء اختيار المقياس');return;}if(!title||!file){showMessage(msgElement,'error','الرجاء إدخال عنوان الدرس واختيار ملف');return;}try{showMessage(msgElement,'info','جاري رفع الملف...');const fileExtension=file.name.split('.').pop();const fileName=`${title}_${Date.now()}.${fileExtension}`;const filePath=`${subjectId}/${fileName}`;const{error:uploadError}=await supabaseClient.storage.from('lessons-files').upload(filePath,file);if(uploadError)throw uploadError;const{data:currentData}=await supabaseClient.from('subjects').select('lesson_count').eq('id',subjectId).single();await supabaseClient.from('subjects').update({lesson_count:(currentData?.lesson_count||0)+1}).eq('id',subjectId);showMessage(msgElement,'success','تم رفع الدرس بنجاح!');document.getElementById('lessonTitle').value='';fileInput.value='';loadSubjects();setTimeout(()=>{msgElement.innerHTML='';},3000);}catch(err){console.error('خطأ:',err);showMessage(msgElement,'error','حدث خطأ أثناء رفع الملف: '+err.message);}}async function deleteLesson(subjectId,fileName){if(!confirm(`هل أنت متأكد من حذف "${fileName}"؟`)){return;}try{const{error}=await supabaseClient.storage.from('lessons-files').remove([`${subjectId}/${fileName}`]);if(error)throw error;const{data:currentData}=await supabaseClient.from('subjects').select('lesson_count').eq('id',subjectId).single();const newCount=Math.max(0,(currentData?.lesson_count||1)-1);await supabaseClient.from('subjects').update({lesson_count:newCount}).eq('id',subjectId);const subject=allSubjects.find(s=>s.id===subjectId);if(subject){viewSubjectLessons(subjectId,subject.name);}loadSubjects();}catch(err){console.error('خطأ:',err);alert('حدث خطأ أثناء حذف الدرس: '+err.message);}}function login(){const email=document.getElementById('email').value.trim();const password=document.getElementById('password').value;const msgElement=document.getElementById('loginMsg');if(email===ADMIN_EMAIL&&password===ADMIN_PASSWORD){localStorage.setItem('isLoggedIn','true');localStorage.setItem('userEmail',email);showAdminMode(email);switchTab('subjects');document.getElementById('email').value='';document.getElementById('password').value='';msgElement.innerHTML='';}else{showMessage(msgElement,'error','البريد الإلكتروني أو كلمة المرور غير صحيحة');}}function logout(){localStorage.removeItem('isLoggedIn');localStorage.removeItem('userEmail');document.getElementById('userWelcome').innerHTML='مرحباً بك في منصة الدروس';document.getElementById('manageTab').style.display='none';document.getElementById('uploadTab').style.display='none';document.getElementById('loginTab').style.display='flex';document.getElementById('logoutBtn').style.display='none';switchTab('subjects');}function getFileIcon(filename){const ext=filename.split('.').pop().toLowerCase();const icons={'pdf':'fas fa-file-pdf','doc':'fas fa-file-word','docx':'fas fa-file-word','ppt':'fas fa-file-powerpoint','pptx':'fas fa-file-powerpoint','txt':'fas fa-file-alt','zip':'fas fa-file-archive','rar':'fas fa-file-archive'};return icons[ext]||'fas fa-file';}function formatFileSize(bytes){if(bytes===0)return'0 B';const k=1024;const sizes=['B','KB','MB','GB'];const i=Math.floor(Math.log(bytes)/Math.log(k));return Math.round(bytes/Math.pow(k,i)*100)/100+' '+sizes[i];}function showMessage(element,type,text){element.className=`message ${type}`;const icons={success:'fa-check-circle',error:'fa-times-circle',info:'fa-spinner fa-spin'};element.innerHTML=`<i class="fas ${icons[type]}"></i> ${text}`;}window.onload=()=>{checkLoginStatus();loadSubjects();}
+</script>
+</body>
+</html>
